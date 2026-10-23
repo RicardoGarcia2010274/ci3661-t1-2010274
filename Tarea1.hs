@@ -5,6 +5,9 @@
 --  Carnet: 20-10274
 --
 --  Declaración de uso de herramientas de IA (obligatoria, ver enunciado):
+
+--Use IA para resolver bugs complicados, relacionados con foldr y la funcion del caballo
+--Tambien la use para entender algunas cosas de la sintaxis de Haskell
 --
 -- =====================================================================
 --  No cambies el nombre del módulo ni la lista de exportación, ni las
@@ -161,3 +164,5 @@ miFilter p = foldr (\x acc -> if p x then x : acc else acc) []
 
 miFoldl :: (b -> a -> b) -> b -> [a] -> b
 miFoldl f z xs = foldr (\x k acc -> k (f acc x)) id xs z
+
+

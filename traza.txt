@@ -1,0 +1,56 @@
+--AQUI LA PREGUNTA 7, OJITO OJITO
+
+--Implementacion en texto plano de la reduccion con foldr, foldl, miFOldl y explicacion de 
+--porque las primeras dos dan diferentes.
+
+--para foldr
+
+-- foldr (-) 0 [0, 2, 7, 4]
+-- = 0 - foldr (-) 0 [2, 7, 4]
+-- = 0 - (2 - foldr (-) 0 [7, 4])
+-- = 0 - (2 - (7 - foldr (-) 0 [4]))
+-- = 0 - (2 - (7 - (4 - foldr (-) 0 [])))
+-- = 0 - (2 - (7 - (4 - 0)))
+-- = 0 - (2 - (7 - 4))
+-- = 0 - (2 - 3)
+-- = 0 - (-1)
+-- = 1
+
+
+--para foldl
+
+-- foldl (-) 0 [0, 2, 7, 4]
+-- = foldl (-) (0 - 0) [2, 7, 4]
+-- = foldl (-) ((0 - 0) - 2) [7, 4]
+-- = foldl (-) (((0 - 0) - 2) - 7) [4]
+-- = foldl (-) ((((0 - 0) - 2) - 7) - 4) []
+-- = (((0 - 0) - 2) - 7) - 4
+-- = ((0 - 2) - 7) - 4
+-- = (-2 - 7) - 4
+-- = -9 - 4
+-- = -13
+
+
+--usando miFOld, quue la definimos asi 
+
+--miFoldl f z xs = foldr (\x k acc -> k (f acc x)) id xs z
+
+-- miFoldl (-) 0 [0, 2]
+-- = foldr (\x k acc -> k (acc - x)) id [0, 2] 0                                  (por def. de miFoldl)
+-- = (\x k acc -> k (acc - x)) 0 (foldr (\x k acc -> k (acc - x)) id [2]) 0       (por eq. 2 de foldr)
+-- = (\k acc -> k (acc - 0)) (foldr (\x k acc -> k (acc - x)) id [2]) 0           (β-reducción, x = 0)
+-- = (\acc -> (foldr (\x k acc -> k (acc - x)) id [2]) (acc - 0)) 0               (β-reducción, k)
+-- = (foldr (\x k acc -> k (acc - x)) id [2]) (0 - 0)                             (β-reducción, acc = 0)
+-- = (foldr (\x k acc -> k (acc - x)) id [2]) 0                                   (evaluación de 0 - 0)
+-- = ((\x k acc -> k (acc - x)) 2 (foldr (\x k acc -> k (acc - x)) id [])) 0      (por eq. 2 de foldr)
+-- = ((\k acc -> k (acc - 2)) (foldr (\x k acc -> k (acc - x)) id [])) 0          (β-reducción, x = 2)
+-- = (\acc -> (foldr (\x k acc -> k (acc - x)) id []) (acc - 2)) 0                (β-reducción, k)
+-- = (foldr (\x k acc -> k (acc - x)) id []) (0 - 2)                              (β-reducción, acc = 0)
+-- = (foldr (\x k acc -> k (acc - x)) id []) (-2)                                 (evaluación de 0 - 2)
+-- = id (-2)                                                                      (por eq. 1 de foldr)
+-- = -2                                                                           (por def. de id)
+
+--foldl y foldr no dan iguales puesto que difieren en la manera en que asocian 
+--los elementos en la lista. foldr asocia a la derecha y foldl a la izquierda. Debido 
+--a esto el orden en que resolvemos las operaicones y realizamos los calculos causa que den 
+--resultados diferentes
