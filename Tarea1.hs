@@ -128,10 +128,29 @@ promedioSobreUmbral umbral xs =
 
 -- B2
 movimientosCaballo :: (Int, Int) -> [(Int, Int)]
-movimientosCaballo = undefined
+
+--listo los pares (dr,dc), dde foirma que las cordenadas salgan en orden 
+--lexicografico 
+
+movimientosCaballo (r, c) =
+  [ (r', c')
+  | (dr, dc) <- [(-2, -1), (-2, 1), (-1, -2), (-1, 2), (1, -2), (1, 2), (2, -1), (2, 1)]
+  , let r' = r + dr
+  , let c' = c + dc
+  , r' >= 1 && r' <= 8
+  , c' >= 1 && c' <= 8
+  ]
 
 enDosSaltos :: (Int, Int) -> Int
-enDosSaltos = undefined
+
+--solamente la lsita de casillas alcanzadas tras el segundo salto
+enDosSaltos pos = length sinDuplicados
+  where
+    -- Todos los destinos posibles tras 2 saltos
+    segundoSalto = [ pos2 | pos1 <- movimientosCaballo pos, pos2 <- movimientosCaballo pos1 ]
+    
+    -- uso foldr para recorrer y sumar solo las posiciones pr las que no he pasado 
+    sinDuplicados = foldr (\x acc -> if x `elem` acc then acc else x : acc) [] segundoSalto
 
 -- B3
 miMap :: (a -> b) -> [a] -> [b]
