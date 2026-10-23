@@ -59,7 +59,9 @@ esPalindromo str = limpia == invertirString limpia
     limpia = limpiar str
 -- A2
 -- Explica aquí, en dos o tres líneas, por qué tu solución recorre la
--- lista una sola vez:
+-- lista una sola vez: porque estoy viendo la lsita elemento a elemento mediante la funcion 
+-- auxiliar recursiva go , actualizando el max y el min en una unica pasada. 
+
 --
 mayorYMenor :: Ord a => [a] -> Maybe (a, a)
 mayorYMenor [] = Nothing
@@ -67,12 +69,40 @@ mayorYMenor (x:xs) = Just (go x x xs)
   where 
     go maxAcc minAcc  [] = (maxAcc, minAcc)
     go maxAcc minAcc (y:ys) = go (max maxAcc y) (min minAcc y) ys
+
+
 -- A3
+
+-- Codigo de la pregunta A3 
 leerHora :: String -> Either String (Int, Int)
-leerHora = undefined
+-- usando eso nos aseguramos que la cadena tenga exactamente cinco caracteres 
+
+-- isDIgit verifica que los caracteres sean numericos 
+leerHora [a, b, ':', c, d]
+  | isDigit a && isDigit b && isDigit c && isDigit d =
+      let hora    = read [a, b]
+          minutos = read [c, d]
+      --Aqui estoy verificando que los digitos no esten fuera de rango
+      in if hora > 23      
+           then Left "hora fuera de rango"
+           else if minutos > 59
+                  then Left "minutos fuera de rango"
+                  else Right (hora, minutos)
+  | otherwise = Left "formato inválido"
+leerHora _ = Left "formato inválido"
 
 duracion :: String -> String -> Either String Int
-duracion = undefined
+
+--uso funciones case anidadas, para encadenar valores de manera aislada
+duracion s1 s2 = case leerHora s1 of
+  Left err1 -> Left err1
+  Right (h1, m1) -> case leerHora s2 of
+    Left err2 -> Left err2
+    Right (h2, m2) ->
+      let t1   = h1 * 60 + m1
+          t2   = h2 * 60 + m2
+          diff = t2 - t1
+      in Right (if diff < 0 then diff + 1440 else diff)
 
 -- =====================================================================
 -- Parte B: orden superior.
