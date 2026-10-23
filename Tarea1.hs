@@ -62,8 +62,11 @@ esPalindromo str = limpia == invertirString limpia
 -- lista una sola vez:
 --
 mayorYMenor :: Ord a => [a] -> Maybe (a, a)
-mayorYMenor = undefined
-
+mayorYMenor [] = Nothing
+mayorYMenor (x:xs) = Just (go x x xs)
+  where 
+    go maxAcc minAcc  [] = (maxAcc, minAcc)
+    go maxAcc minAcc (y:ys) = go (max maxAcc y) (min minAcc y) ys
 -- A3
 leerHora :: String -> Either String (Int, Int)
 leerHora = undefined
