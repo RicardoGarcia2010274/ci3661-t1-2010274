@@ -111,8 +111,20 @@ duracion s1 s2 = case leerHora s1 of
 -- =====================================================================
 
 -- B1
+
+--uso foldr que es bien interesante, ya que me permite reocorrer la lsita 
+-- mientreas voy evaluando la funcion paso 
 promedioSobreUmbral :: Double -> [Double] -> Maybe Double
-promedioSobreUmbral = undefined
+promedioSobreUmbral umbral xs =
+  let (suma, cuenta) = foldr paso (0.0, 0) xs
+      paso x (s, c)
+        | x > umbral = (s + x, c + 1)
+        | otherwise  = (s, c)
+
+  --si no encuentra un elemento mayor, retoirna nothing 
+  in if cuenta == 0
+       then Nothing
+       else Just (suma / fromIntegral cuenta)
 
 -- B2
 movimientosCaballo :: (Int, Int) -> [(Int, Int)]
